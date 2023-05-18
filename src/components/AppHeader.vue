@@ -13,7 +13,10 @@
       </label>
       <div class="buttons">
         <span class="user-name"></span>
-        <button class="button button-primary button-auth">
+        <button
+          class="button button-primary button-auth"
+          @click="$emit('showModalAuth')"
+        >
           <span class="button-auth-svg"></span>
           <span class="button-text">Войти</span>
         </button>
