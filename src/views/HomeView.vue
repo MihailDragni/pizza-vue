@@ -66,8 +66,7 @@ export default {
   },
   methods: {
     getPartnersData() {
-      axios
-        .get('../db/db.json')
+      axios.get('@/assets/db/db.json')
         .then((response) => (this.partners = response.data.db.partners))
         .catch((error) => console.log(error))
     },
