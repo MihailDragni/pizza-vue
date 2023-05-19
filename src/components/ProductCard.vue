@@ -17,8 +17,11 @@
       </div>
       <!-- /.card-info -->
       <div class="card-buttons">
-        <button class="button button-primary button-add-cart">
-          <span class="button-card-text" @click="addToCart">В корзину</span>
+        <button
+          class="button button-primary button-add-cart"
+          @click="addToCart"
+        >
+          <span class="button-card-text">В корзину</span>
           <span class="button-cart-svg"></span>
         </button>
         <strong class="card-price-bold">{{ product.price }} ₽</strong>
