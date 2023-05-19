@@ -18,9 +18,7 @@
       <!-- /.card-info -->
       <div class="card-buttons">
         <button class="button button-primary button-add-cart">
-          <span class="button-card-text" @click="$emit('showModalCart')"
-            >В корзину</span
-          >
+          <span class="button-card-text" @click="addToCart">В корзину</span>
           <span class="button-cart-svg"></span>
         </button>
         <strong class="card-price-bold">{{ product.price }} ₽</strong>
@@ -37,6 +35,11 @@ export default {
     product: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    addToCart() {
+      this.$emit('addToCart', this.product)
     },
   },
 }

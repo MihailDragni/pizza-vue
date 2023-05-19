@@ -2,7 +2,7 @@
   <app-header @showModalAuth="showModalAuth" />
   <router-view />
   <app-footer />
-  <modal-auth v-model:show="modalAuthVisible" />
+  <modal-auth v-model:show="isModalAuthVisible" />
 </template>
 
 <script>
@@ -12,12 +12,12 @@ export default {
   components: { AppHeader, AppFooter },
   data() {
     return {
-      modalAuthVisible: false,
+      isModalAuthVisible: false,
     }
   },
   methods: {
     showModalAuth() {
-      this.modalAuthVisible = true
+      this.isModalAuthVisible = true
     },
   },
 }

@@ -42,7 +42,7 @@
         <div class="cards cards-restaurants">
           <restaurants-card
             :card="card"
-            v-for="card in partners"
+            v-for="card in RESTAURANTS"
             :key="card.name"
           />
         </div>
@@ -55,24 +55,18 @@
 
 <script>
 import RestaurantsCard from '@/components/RestaurantCard.vue'
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   components: { RestaurantsCard },
   name: 'home-view',
-  data() {
-    return {
-      partners: {},
-    }
-  },
   methods: {
-    getPartnersData() {
-      axios.get('@/assets/db/db.json')
-        .then((response) => (this.partners = response.data.db.partners))
-        .catch((error) => console.log(error))
-    },
+    ...mapActions(['GET_RESTAURANTS_FROM_API']),
   },
   mounted() {
-    this.getPartnersData()
+    this.GET_RESTAURANTS_FROM_API()
+  },
+  computed: {
+    ...mapGetters(['RESTAURANTS']),
   },
 }
 </script>

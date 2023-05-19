@@ -15,9 +15,9 @@
         </div>
         <div class="cards cards-menu">
           <product-card
-            @showModalCart="showModalCart"
+            @addToCart="addToCart"
             :product="product"
-            v-for="product in currentProducts"
+            v-for="product in PRODUCTS"
             :key="product.id"
           ></product-card>
           <!-- /.card -->
@@ -27,49 +27,46 @@
     </div>
     <!-- /.container -->
   </main>
-  <modal-cart v-model:show="modalCartVisible" />
+  <modal-cart v-model:show="isModalCartVisible" />
 </template>
 
 <script>
 import ProductCard from '@/components/ProductCard.vue'
-import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'restaurant-view',
   components: { ProductCard },
   data() {
     return {
-      modalCartVisible: false,
-      currentProducts: [],
+      isModalCartVisible: false,
       currentRestaurant: {},
     }
   },
+  computed: {
+    ...mapGetters(['PRODUCTS', 'RESTAURANTS']),
+  },
   methods: {
-    showModalCart() {
-      this.modalCartVisible = true
+    ...mapActions([
+      'GET_PRODUCTS_FROM_API',
+      'GET_RESTAURANTS_FROM_API',
+      'ADD_TO_CART',
+    ]),
+
+    addToCart(product) {
+      this.isModalCartVisible = true
+      this.ADD_TO_CART(product)
     },
 
-    getCurrentProducts() {
-      axios
-        .get(`../db/${this.$route.params.products}`)
-        .then((response) => (this.currentProducts = response.data))
-        .catch((error) => console.log(error))
-    },
-
-    getCurrentRestaurant() {
-      axios
-        .get('../db/db.json')
-        .then(
-          (response) =>
-            (this.currentRestaurant = response.data.db.partners.find(
-              (elem) => elem.products === String(this.$route.params.products)
-            ))
-        )
-        .catch((error) => console.log(error))
+    async getCurrentRestaurant() {
+      const res = await this.GET_RESTAURANTS_FROM_API()
+      return (this.currentRestaurant = res.find(
+        (elem) => String(elem.products) === String(this.$route.params.products)
+      ))
     },
   },
   mounted() {
+    this.GET_PRODUCTS_FROM_API(this.$route.params.products)
     this.getCurrentRestaurant()
-    this.getCurrentProducts()
   },
 }
 </script>

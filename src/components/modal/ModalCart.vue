@@ -7,53 +7,22 @@
       </div>
       <!-- /.modal-header -->
       <div class="modal-body">
-        <div class="food-row">
-          <span class="food-name">Ролл угорь стандарт</span>
-          <strong class="food-price">250 ₽</strong>
-          <div class="food-counter">
-            <button class="counter-button">-</button>
-            <span class="counter">1</span>
-            <button class="counter-button">+</button>
-          </div>
-        </div>
-        <!-- /.foods-row -->
-        <div class="food-row">
-          <span class="food-name">Ролл угорь стандарт</span>
-          <strong class="food-price">250 ₽</strong>
-          <div class="food-counter">
-            <button class="counter-button">-</button>
-            <span class="counter">1</span>
-            <button class="counter-button">+</button>
-          </div>
-        </div>
-        <!-- /.foods-row -->
-        <div class="food-row">
-          <span class="food-name">Ролл угорь стандарт</span>
-          <strong class="food-price">250 ₽</strong>
-          <div class="food-counter">
-            <button class="counter-button">-</button>
-            <span class="counter">1</span>
-            <button class="counter-button">+</button>
-          </div>
-        </div>
-        <!-- /.foods-row -->
-        <div class="food-row">
-          <span class="food-name">Ролл угорь стандарт</span>
-          <strong class="food-price">250 ₽</strong>
-          <div class="food-counter">
-            <button class="counter-button">-</button>
-            <span class="counter">1</span>
-            <button class="counter-button">+</button>
-          </div>
-        </div>
+        <template v-if="CART.length">
+          <cart-item
+            v-for="product in CART"
+            :key="product.id"
+            :product="product"
+          ></cart-item>
+        </template>
+        <h3 v-else>Добавьте товар</h3>
         <!-- /.foods-row -->
       </div>
       <!-- /.modal-body -->
       <div class="modal-footer">
-        <span class="modal-pricetag">1250 ₽</span>
+        <span class="modal-pricetag">{{ cartTotalCost }} ₽</span>
         <div class="footer-buttons">
           <button class="button button-primary">Оформить заказ</button>
-          <button class="button clear-cart" @click="hideDialog">Отмена</button>
+          <button class="button clear-cart" @click="clearCart">Отмена</button>
         </div>
       </div>
       <!-- /.modal-footer -->
@@ -63,8 +32,11 @@
 </template>
 
 <script>
+import CartItem from '@/components/CartItem.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'modal-cart',
+  components: { CartItem },
   props: {
     show: {
       type: Boolean,
@@ -72,8 +44,30 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['CLEAR_CART']),
     hideDialog() {
       this.$emit('update:show', false)
+    },
+    clearCart() {
+      this.CLEAR_CART()
+    },
+  },
+  computed: {
+    ...mapGetters(['CART']),
+    cartTotalCost() {
+      if (!this.CART.length) {
+        return 0
+      }
+      let result = []
+      this.CART.forEach((el) => {
+        result.push(el.price * el.quantity)
+      })
+
+      result = result.reduce((sum, el) => {
+        return sum + el
+      })
+
+      return result
     },
   },
 }
